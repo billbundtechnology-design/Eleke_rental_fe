@@ -80,15 +80,6 @@
             margin-right: 8px;
         }
     </style>
-    <script src="./env-loader.js"></script>
-    <script src="./api-config.js"></script>
-    <script>
-        // Test if backend is reachable
-        fetch(getApiUrl('/health'))
-            .then(res => res.json())
-            .then(data => console.log('Backend health check:', data))
-            .catch(err => console.error('Backend not reachable:', err));
-    </script>
 </head>
 <body class="bg-gray-100 font-sans antialiased" x-data="app()" x-init="init()" x-cloak>
 
