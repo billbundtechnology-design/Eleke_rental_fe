@@ -8,40 +8,6 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script>
-        // Environment & API Configuration - Inlined to avoid MIME type issues on production
-        (function initAPIConfig() {
-            // Load environment
-            if (!window.__VITE_API_BASE_URL_INJECTED__) {
-                const saved = localStorage.getItem('VITE_API_BASE_URL');
-                if (saved) {
-                    window.VITE_API_BASE_URL = saved;
-                } else {
-                    const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                    window.VITE_API_BASE_URL = isDev ? 'http://localhost:5000' : 'https://elekerentalbe-production.up.railway.app';
-                }
-                window.__VITE_API_BASE_URL_INJECTED__ = true;
-            }
-            
-            // Configure API
-            const apiUrl = window.VITE_API_BASE_URL || 'http://localhost:5000';
-            window.API_BASE_URL = apiUrl;
-            
-            // Define API helper functions
-            window.getApiUrl = function(path) {
-                const cleanBase = window.API_BASE_URL.endsWith('/') ? window.API_BASE_URL.slice(0, -1) : window.API_BASE_URL;
-                const cleanPath = path.startsWith('/') ? path : '/' + path;
-                const fullPath = cleanPath.startsWith('/api/') ? cleanPath : '/api' + cleanPath;
-                return cleanBase + fullPath;
-            };
-            
-            window.getApiBaseUrl = function() {
-                return window.API_BASE_URL;
-            };
-            
-            console.log('[API Config] API_BASE_URL =', apiUrl);
-        })();
-    </script>
     <style>
         /* Alpine.js cloak - prevents flashing */
         [x-cloak] { display: none !important; }
@@ -80,6 +46,38 @@
             margin-right: 8px;
         }
     </style>
+    <script>
+    const getApiBaseUrl = () => {
+        const hostname = window.location.hostname;
+        const port = window.location.port;
+        console.log('Current hostname:', hostname, 'port:', port);
+        
+        // Local development
+        if ((hostname === 'localhost' || hostname === '127.0.0.1') && port === '5500') {
+            return 'http://localhost:5000';
+        }
+        if ((hostname === 'localhost' || hostname === '127.0.0.1') && port === '5000') {
+            return '';
+        }
+        
+        // Railway production URL
+        return 'https://elekerentalbe-production.up.railway.app';
+    };
+    
+    const API_BASE_URL = getApiBaseUrl();
+    console.log('API Base URL:', API_BASE_URL);
+    
+    const getApiUrl = (path) => { 
+        const basePath = API_BASE_URL ? `${API_BASE_URL}/api` : '/api'; 
+        return `${basePath}${path}`;
+    };
+
+    // Test if backend is reachable
+    fetch(API_BASE_URL + '/api/health')
+        .then(res => res.json())
+        .then(data => console.log('Backend health check:', data))
+        .catch(err => console.error('Backend not reachable:', err));
+    </script>
 </head>
 <body class="bg-gray-100 font-sans antialiased" x-data="app()" x-init="init()" x-cloak>
 

@@ -7,38 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
-        // Environment & API Configuration - Inlined to avoid MIME type issues on production
-        (function initAPIConfig() {
-            // Load environment
-            if (!window.__VITE_API_BASE_URL_INJECTED__) {
-                const saved = localStorage.getItem('VITE_API_BASE_URL');
-                if (saved) {
-                    window.VITE_API_BASE_URL = saved;
-                } else {
-                    const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                    window.VITE_API_BASE_URL = isDev ? 'http://localhost:5000' : 'https://elekerentalbe-production.up.railway.app';
-                }
-                window.__VITE_API_BASE_URL_INJECTED__ = true;
-            }
-            
-            // Configure API
-            const apiUrl = window.VITE_API_BASE_URL || 'http://localhost:5000';
-            window.API_BASE_URL = apiUrl;
-            
-            // Define API helper functions
-            window.getApiUrl = function(path) {
-                const cleanBase = window.API_BASE_URL.endsWith('/') ? window.API_BASE_URL.slice(0, -1) : window.API_BASE_URL;
-                const cleanPath = path.startsWith('/') ? path : '/' + path;
-                const fullPath = cleanPath.startsWith('/api/') ? cleanPath : '/api' + cleanPath;
-                return cleanBase + fullPath;
-            };
-            
-            window.getApiBaseUrl = function() {
-                return window.API_BASE_URL;
-            };
-            
-            console.log('[API Config] API_BASE_URL =', apiUrl);
-        })();
+        // Direct API configuration - point to your actual backend
+        const API_BASE_URL = 'https://elekerentalbe-production.up.railway.app';
+        
+        console.log('API Base URL:', API_BASE_URL);
     </script>
 </head>
 <body class="bg-slate-900 flex items-center justify-center min-h-screen p-4">
@@ -82,9 +54,8 @@
             btn.disabled = true;
             btn.textContent = 'Signing In...';
             try {
-                const loginUrl = getApiUrl('/auth/login');
-                console.log('Attempting login to:', loginUrl);
-                const res = await fetch(loginUrl, {
+                console.log('Attempting login to:', `${API_BASE_URL}/api/auth/login`);
+                const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
@@ -96,8 +67,9 @@
                 const data = await res.json();
                 if (res.ok) {
                     localStorage.setItem('token', data.token);
-                    // Use relative path to redirect to dashboard
-                    window.location.href = './dashboard.html';
+                    const currentPath = window.location.pathname;
+                    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+                    window.location.href = basePath + '/dashboard.html';
                 } else {
                     alert(data.message || 'Login failed');
                 }
