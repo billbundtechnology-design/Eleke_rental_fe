@@ -46,37 +46,14 @@
             margin-right: 8px;
         }
     </style>
+    <script src="./env-loader.js"></script>
+    <script src="./api-config.js"></script>
     <script>
-    const getApiBaseUrl = () => {
-        const hostname = window.location.hostname;
-        const port = window.location.port;
-        console.log('Current hostname:', hostname, 'port:', port);
-        
-        // Local development
-        if ((hostname === 'localhost' || hostname === '127.0.0.1') && port === '5500') {
-            return 'http://localhost:5000';
-        }
-        if ((hostname === 'localhost' || hostname === '127.0.0.1') && port === '5000') {
-            return '';
-        }
-        
-        // Railway production URL
-        return 'https://gani-eleke-backend-production.up.railway.app';
-    };
-    
-    const API_BASE_URL = getApiBaseUrl();
-    console.log('API Base URL:', API_BASE_URL);
-    
-    const getApiUrl = (path) => { 
-        const basePath = API_BASE_URL ? `${API_BASE_URL}/api` : '/api'; 
-        return `${basePath}${path}`;
-    };
-
-    // Test if backend is reachable
-    fetch(API_BASE_URL + '/api/health')
-        .then(res => res.json())
-        .then(data => console.log('Backend health check:', data))
-        .catch(err => console.error('Backend not reachable:', err));
+        // Test if backend is reachable
+        fetch(getApiUrl('/health'))
+            .then(res => res.json())
+            .then(data => console.log('Backend health check:', data))
+            .catch(err => console.error('Backend not reachable:', err));
     </script>
 </head>
 <body class="bg-gray-100 font-sans antialiased" x-data="app()" x-init="init()" x-cloak>
