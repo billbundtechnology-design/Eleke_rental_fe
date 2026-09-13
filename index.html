@@ -70,9 +70,9 @@
                 const data = await res.json();
                 if (res.ok) {
                     localStorage.setItem('token', data.token);
-                    const currentPath = window.location.pathname;
-                    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/'));
-                    window.location.href = basePath + '/dashboard.html';
+                    // Navigate to dashboard using absolute URL
+                    const url = new URL('./dashboard.html', window.location.href);
+                    window.location.href = url.href;
                 } else {
                     alert(data.message || 'Login failed');
                 }

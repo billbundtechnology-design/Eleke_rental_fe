@@ -1,0 +1,24 @@
+{
+  "build": {
+    "dir": ".",
+    "command": "echo 'No build needed - static files'"
+  },
+  "rewrites": [
+    {
+      "source": "/dashboard.html",
+      "destination": "/dashboard.html"
+    },
+    {
+      "source": "/receipt.html",
+      "destination": "/receipt.html"
+    },
+    {
+      "source": "/config.js",
+      "destination": "/config.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

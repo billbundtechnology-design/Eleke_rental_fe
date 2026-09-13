@@ -1,0 +1,10 @@
+# Netlify redirect rules
+# Serve static HTML files directly, fallback to index.html for SPA routes
+
+/dashboard.html  /dashboard.html  200
+/receipt.html    /receipt.html    200
+/config.js       /config.js       200
+
+/index.html      /index.html      200
+
+/*    /index.html    200
